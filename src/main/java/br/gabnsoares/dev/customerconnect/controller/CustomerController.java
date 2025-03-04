@@ -3,6 +3,7 @@ package br.gabnsoares.dev.customerconnect.controller;
 import br.gabnsoares.dev.customerconnect.controller.dto.ApiResponse;
 import br.gabnsoares.dev.customerconnect.controller.dto.CreateCustomerDto;
 import br.gabnsoares.dev.customerconnect.controller.dto.PaginationResponse;
+import br.gabnsoares.dev.customerconnect.controller.dto.UpdateCustomerDto;
 import br.gabnsoares.dev.customerconnect.entity.CustomerEntity;
 import br.gabnsoares.dev.customerconnect.service.CustomerService;
 import org.springframework.http.ResponseEntity;
@@ -49,10 +50,21 @@ public class CustomerController {
     @GetMapping(path = "/{customerId}")
     public ResponseEntity<CustomerEntity> findById(@PathVariable("customerId") Long customerId) {
 
-        var user = customerService.findById(customerId);
+        var customer = customerService.findById(customerId);
 
-        return user.isPresent() ?
-                ResponseEntity.ok(user.get()) :
+        return customer.isPresent() ?
+                ResponseEntity.ok(customer.get()) :
+                ResponseEntity.notFound().build();
+    }
+
+    @PutMapping(path = "/{customerId}")
+    public ResponseEntity<CustomerEntity> updateById(@PathVariable("customerId") Long customerId,
+                                                     @RequestBody UpdateCustomerDto dto) {
+
+        var customer = customerService.updateById(customerId, dto);
+
+        return customer.isPresent() ?
+                ResponseEntity.noContent().build() :
                 ResponseEntity.notFound().build();
     }
 

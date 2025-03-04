@@ -1,6 +1,7 @@
 package br.gabnsoares.dev.customerconnect.service;
 
 import br.gabnsoares.dev.customerconnect.controller.dto.CreateCustomerDto;
+import br.gabnsoares.dev.customerconnect.controller.dto.UpdateCustomerDto;
 import br.gabnsoares.dev.customerconnect.entity.CustomerEntity;
 import br.gabnsoares.dev.customerconnect.repository.CustomerRepository;
 import org.springframework.data.domain.Page;
@@ -71,5 +72,32 @@ public class CustomerService {
 
     public Optional<CustomerEntity> findById(Long customerId) {
         return customerRepository.findById(customerId);
+    }
+
+    public Optional<CustomerEntity> updateById(Long customerId, UpdateCustomerDto dto) {
+
+        var customer = customerRepository.findById(customerId);
+
+        if (customer.isPresent()) {
+
+            updateFields(dto, customer);
+
+            customerRepository.save(customer.get());
+
+        }
+
+        return customer;
+    }
+
+    private static void updateFields(UpdateCustomerDto dto, Optional<CustomerEntity> customer) {
+        if (hasText(dto.fullName())) {
+            customer.get().setFullName(dto.fullName());
+        }
+        if (hasText(dto.email())) {
+            customer.get().setEmail(dto.email());
+        }
+        if (hasText(dto.phoneNumber())) {
+            customer.get().setPhoneNumber(dto.phoneNumber());
+        }
     }
 }
