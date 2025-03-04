@@ -21,7 +21,6 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-
     @PostMapping
     public ResponseEntity<Void> createCustomer(@RequestBody CreateCustomerDto dto) {
 
@@ -35,7 +34,7 @@ public class CustomerController {
     @GetMapping
     public ResponseEntity<ApiResponse<CustomerEntity>> findAll(@RequestParam(name = "page", defaultValue = "0") Integer page,
                                                                @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
-                                                               @RequestParam(name = "orderBy", defaultValue = "10") String orderBy,
+                                                               @RequestParam(name = "orderBy", defaultValue = "desc") String orderBy,
                                                                @RequestParam(name = "cpf", required = false) String cpf,
                                                                @RequestParam(name = "email", required = false) String email) {
 
@@ -68,5 +67,13 @@ public class CustomerController {
                 ResponseEntity.notFound().build();
     }
 
+    @DeleteMapping(path = "/{customerId}")
+    public ResponseEntity<CustomerEntity> deleteById(@PathVariable("customerId") Long customerId) {
 
+        var deleted = customerService.deleteById(customerId);
+
+        return deleted ?
+                ResponseEntity.noContent().build() :
+                ResponseEntity.notFound().build();
+    }
 }

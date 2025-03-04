@@ -53,10 +53,10 @@ public class CustomerService {
             return customerRepository.findByCpfAndEmail(cpf, email, pageRequest);
         }
         if (hasText(cpf)) {
-            customerRepository.findByCpf(cpf, pageRequest);
+            return customerRepository.findByCpf(cpf, pageRequest);
         }
         if (hasText(email)) {
-            customerRepository.findByEmail(email, pageRequest);
+            return customerRepository.findByEmail(email , pageRequest);
         }
         return customerRepository.findAll(pageRequest);
     }
@@ -99,5 +99,16 @@ public class CustomerService {
         if (hasText(dto.phoneNumber())) {
             customer.get().setPhoneNumber(dto.phoneNumber());
         }
+    }
+
+    public boolean deleteById(Long customerId) {
+
+       var exists = customerRepository.existsById(customerId);
+
+        if (exists) {
+            customerRepository.deleteById(customerId);
+        }
+
+        return exists;
     }
 }
